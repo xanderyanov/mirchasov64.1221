@@ -100,42 +100,42 @@ gulp.task("myJs", function () {
 	);
 });
 
-gulp.task("devjs", function () {
-	return (
-		gulp
-			// .src("src/assets/js/**/*.*")
-			.src("src/assets/js/devjs.js")
-			.pipe(plumber())
-			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
-			// .pipe(uglify()) //Сожмем наш js
-			// .pipe(sourcemaps.write("."))
-			.pipe(gulp.dest("build/assets/js"))
-	);
-});
+// gulp.task("devjs", function () {
+// 	return (
+// 		gulp
+// 			// .src("src/assets/js/**/*.*")
+// 			.src("src/assets/js/devjs.js")
+// 			.pipe(plumber())
+// 			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
+// 			// .pipe(uglify()) //Сожмем наш js
+// 			// .pipe(sourcemaps.write("."))
+// 			.pipe(gulp.dest("build/assets/js"))
+// 	);
+// });
 
-gulp.task("sliderJs", function () {
-	return (
-		gulp
-			.src("src/assets/js/slider.js")
-			.pipe(plumber())
-			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
-			// .pipe(uglify()) //Сожмем наш js
-			// .pipe(sourcemaps.write("."))
-			.pipe(gulp.dest("build/assets/js"))
-	);
-});
+// gulp.task("sliderJs", function () {
+// 	return (
+// 		gulp
+// 			.src("src/assets/js/slider.js")
+// 			.pipe(plumber())
+// 			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
+// 			// .pipe(uglify()) //Сожмем наш js
+// 			// .pipe(sourcemaps.write("."))
+// 			.pipe(gulp.dest("build/assets/js"))
+// 	);
+// });
 
-gulp.task("resizeJs", function () {
-	return (
-		gulp
-			.src("src/assets/js/resize.js")
-			.pipe(plumber())
-			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
-			// .pipe(uglify()) //Сожмем наш js
-			// .pipe(sourcemaps.write("."))
-			.pipe(gulp.dest("build/assets/js"))
-	);
-});
+// gulp.task("resizeJs", function () {
+// 	return (
+// 		gulp
+// 			.src("src/assets/js/resize.js")
+// 			.pipe(plumber())
+// 			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
+// 			// .pipe(uglify()) //Сожмем наш js
+// 			// .pipe(sourcemaps.write("."))
+// 			.pipe(gulp.dest("build/assets/js"))
+// 	);
+// });
 
 gulp.task("fonts", function () {
 	return gulp.src("src/assets/fonts/**/*.*").pipe(gulp.dest("build/assets/fonts"));
@@ -153,7 +153,7 @@ gulp.task(
 	"build",
 	gulp.series(
 		"clean",
-		gulp.parallel("css", "pug", "image", "js", "sliderJs", "myJs", "devjs", "resizeJs", "fonts", "icomoon")
+		gulp.parallel("css", "pug", "image", "js", "myJs", "fonts", "icomoon")
 	)
 );
 
@@ -170,18 +170,18 @@ gulp.task("watch", function () {
 		remember.forget("myJs", path.resolve(filepath));
 		delete cached.caches.myJs[path.resolve(filepath)];
 	});
-	gulp.watch("src/assets/js/devjs.js", gulp.series("devjs")).on("uplink", function (filepath) {
-		remember.forget("devjs", path.resolve(filepath));
-		delete cached.caches.devjs[path.resolve(filepath)];
-	});
-	gulp.watch("src/assets/js/slider.js", gulp.series("sliderJs")).on("uplink", function (filepath) {
-		remember.forget("sliderJs", path.resolve(filepath));
-		delete cached.caches.sliderJs[path.resolve(filepath)];
-	});
-	gulp.watch("src/assets/js/resize.js", gulp.series("resizeJs")).on("uplink", function (filepath) {
-		remember.forget("resizeJs", path.resolve(filepath));
-		delete cached.caches.sliderJs[path.resolve(filepath)];
-	});
+	// gulp.watch("src/assets/js/devjs.js", gulp.series("devjs")).on("uplink", function (filepath) {
+	// 	remember.forget("devjs", path.resolve(filepath));
+	// 	delete cached.caches.devjs[path.resolve(filepath)];
+	// });
+	// gulp.watch("src/assets/js/slider.js", gulp.series("sliderJs")).on("uplink", function (filepath) {
+	// 	remember.forget("sliderJs", path.resolve(filepath));
+	// 	delete cached.caches.sliderJs[path.resolve(filepath)];
+	// });
+	// gulp.watch("src/assets/js/resize.js", gulp.series("resizeJs")).on("uplink", function (filepath) {
+	// 	remember.forget("resizeJs", path.resolve(filepath));
+	// 	delete cached.caches.sliderJs[path.resolve(filepath)];
+	// });
 	gulp.watch("src/**/*.pug", gulp.series("pug"));
 });
 
