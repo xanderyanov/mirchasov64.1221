@@ -461,3 +461,142 @@ input.work_email-xs {
 	background-color: #1d91d6;
 	box-shadow: 0px 5px 5px 0px rgba(50, 50, 50, 0.75);
 }
+
+/*************************/
+
+.mov__area {
+	background: rgba(255, 255, 255, 0.9);
+	width: 100%;
+	padding: 20px 10px;
+	position: relative;
+	border-radius: 3px;
+}
+
+.mov_title {
+	font-size: 1.25rem;
+	line-height: 1.2;
+	text-align: center;
+	padding: 10px 15px;
+	font-weight: 300;
+}
+
+.mov_subj {
+	font-size: 1.325rem;
+	text-align: center;
+	padding: 0 15px 10px;
+	font-weight: 300;
+}
+
+.mov_desc {
+	font-size: 1rem;
+	line-height: 1.2;
+	text-align: center;
+	padding: 10px 15px;
+	font-weight: 300;
+}
+
+.mov {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 80%;
+	margin: 0 auto;
+}
+
+.mov input {
+	width: 100%;
+	box-shadow: inset 0 0 2px #333;
+	height: 32px;
+	background-color: #fff;
+	padding: 0 10px;
+	font-family: "Roboto", sans-serif;
+	font-size: 1rem;
+	font-weight: 300;
+	box-sizing: border-box;
+	display: inline-block;
+	outline: none;
+	margin-bottom: 5px;
+	color: #000;
+	border: none;
+	border-radius: 3px;
+}
+
+.mov input.error {
+	box-shadow: inset 0 0 2px #f00;
+}
+
+.mov textarea {
+	width: 100%;
+	box-shadow: inset 0 0 2px #333;
+	height: 150px;
+	background-color: #fff;
+	padding: 10px;
+	font-family: "Roboto", sans-serif;
+	font-size: 1rem;
+	font-weight: 300;
+	box-sizing: border-box;
+	display: inline-block;
+	outline: none;
+	margin-bottom: 5px;
+	color: #000;
+	border: none;
+	border-radius: 3px;
+	resize: none;
+}
+
+.mov textarea.error {
+	box-shadow: inset 0 0 2px #f00;
+}
+
+input.work_email-mov {
+	display: none;
+}
+
+.select-mov {
+	width: 100%;
+	box-shadow: inset 0 0 2px #333;
+	height: 32px;
+	background-color: #fff;
+	padding: 0 10px;
+	font-family: "Roboto", sans-serif;
+	font-size: 1rem;
+	font-weight: 300;
+	box-sizing: border-box;
+	display: inline-block;
+	outline: none;
+	margin-bottom: 5px;
+	color: #000;
+	border: none;
+	border-radius: 3px;
+}
+
+.select-mov.error {
+	box-shadow: inset 0 0 2px #f00;
+}
+
+.submit-mov {
+	width: 100%;
+	border: none;
+	outline: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-decoration: none;
+	cursor: pointer;
+	font-family: "Roboto", sans-serif;
+	padding: 0 25px;
+	background: #738ea2;
+	color: #fff;
+	font-size: 1.125rem;
+	font-weight: 400;
+	text-transform: uppercase;
+	line-height: 2rem;
+	border-radius: 20px;
+	transition: all 0.5s;
+}
+
+.submit-mov:hover {
+	background-color: #1d91d6;
+	box-shadow: 0px 5px 5px 0px rgba(50, 50, 50, 0.75);
+}

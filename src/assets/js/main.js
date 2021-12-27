@@ -258,6 +258,9 @@ $(function () {
 
 	$(".phoneZ1").mask("+7 (999) 999-9999");
 	$(".phone1").mask("+7 (999) 999-9999");
+	$(".phone-mf").mask("+7 (999) 999-9999");
+	$(".phone-xs").mask("+7 (999) 999-9999");
+	$(".phone-mov").mask("+7 (999) 999-9999");
 
 	$(".content table").wrap('<div class="table_outer"></div>');
 
@@ -542,7 +545,7 @@ $(function () {
 	$(".formClose").on("click", function (e) {
 		e.preventDefault();
 		$(".modelXsContainer_js").addClass("bounceOutUp").removeClass("bounceInDown").fadeOut(600);
-		$(".modelFaq_js").removeClass("js_active");
+		$(".modelXs_js").removeClass("js_active");
 		$(".overlay").fadeOut(600);
 	});
 	$(".xs").on("click", ".submit-xs", function (e) {
@@ -606,6 +609,98 @@ $(function () {
 					$(".modelXsContainer_js").addClass("bounceOutUp").removeClass("bounceInDown").fadeOut(600);
 					$(".overlay").fadeOut(200);
 					$(".modelXs_js").removeClass("js_active");
+				}
+			);
+		}
+	});
+
+	$(".modelMov_js").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var self = $(this);
+		if (self.hasClass("js_active")) {
+			self.removeClass("js_active");
+			$(".modelMovContainer_js").addClass("bounceOutUp").removeClass("bounceInDown").fadeOut(600);
+			$(".overlay").fadeOut(200);
+		} else {
+			self.addClass("js_active");
+			$(".modelMovContainer_js").removeClass("bounceOutUp").addClass("bounceInDown").fadeIn(200);
+			$(".overlay").fadeIn(200);
+		}
+	});
+	$(".overlay").on("click", function (e) {
+		e.preventDefault();
+		$(".modelMovContainer_js").addClass("bounceOutUp").removeClass("bounceInDown").fadeOut(600);
+		$(".modelMov_js").removeClass("js_active");
+		$(".overlay").fadeOut(600);
+	});
+	$(".formClose").on("click", function (e) {
+		e.preventDefault();
+		$(".modelMovContainer_js").addClass("bounceOutUp").removeClass("bounceInDown").fadeOut(600);
+		$(".modelMov_js").removeClass("js_active");
+		$(".overlay").fadeOut(600);
+	});
+	$(".mov").on("click", ".submit-mov", function (e) {
+		e.preventDefault();
+		var model = $(".mov_subj").text();
+		var subj = "Запрос перемещения в другой магазин " + model;
+		var name = $(".name-mov").val();
+		var phone = $(".phone-mov").val();
+		var email = $(".email-mov").val();
+		var message = $(".select-mov option:selected").val();
+		var workemail = $(".work_email-mov").val();
+		var r = /^[\w\.\d-_]+@[\w\.\d-_]+\.\w{2,4}$/i;
+		if (name === "") {
+			swal({ title: "Поле Имя пустое", text: "Заполните поле имя", type: "error", confirmButtonText: "ок" });
+			$(".name-mov").addClass("error");
+			setTimeout(function () {
+				$(".name-mov").removeClass("error");
+			}, 3000);
+		} else if (phone === "") {
+			swal({ title: "Поле Телефон пустое", text: "Заполните поле телефон", type: "error", confirmButtonText: "ок" });
+			$(".phone-mov").addClass("error");
+			setTimeout(function () {
+				$(".phone-mov").removeClass("error");
+			}, 3000);
+		} else if (email === "") {
+			swal({ title: "Ошибка Email", text: "Заполните поле Email", type: "error", confirmButtonText: "ок" });
+			$(".email-mov").addClass("error");
+			setTimeout(function () {
+				$(".email-mov").removeClass("error");
+			}, 3000);
+		} else if (!r.test(email)) {
+			swal({ title: "Ошибка", text: "Корректно заполните поле e-mail", type: "error", confirmButtonText: "ок" });
+			$(".email-mov").addClass("error");
+			setTimeout(function () {
+				$(".email-mov").removeClass("error");
+			}, 3000);
+		} else if (message === "") {
+			swal({ title: "Пустое сообщение", text: "Укажите удобный Вам магазин", type: "error", confirmButtonText: "ок" });
+			$(".select-mov").addClass("error");
+			setTimeout(function () {
+				$(".select-mov").removeClass("error");
+			}, 3000);
+		} else if (workemail !== "") {
+			swal({ title: "Ах ты жулик", text: "Уберите робота от компьютера", type: "error", confirmButtonText: "ок" });
+		} else {
+			$.post(
+				"mail.php",
+				{
+					subj: subj,
+					name: name,
+					phone: phone,
+					email: email,
+					message: message,
+				},
+				function () {
+					swal({ title: "Спасибо", text: "Ваше сообщение отправлено", type: "success", confirmButtonText: "ок" });
+					$(".name-mov").val("").removeClass("error");
+					$(".phone-mov").val("").removeClass("error");
+					$(".email-mov").val("").removeClass("error");
+					$(".message-mov").val("").removeClass("error");
+					$(".modelMovContainer_js").addClass("bounceOutUp").removeClass("bounceInDown").fadeOut(600);
+					$(".overlay").fadeOut(200);
+					$(".modelMov_js").removeClass("js_active");
 				}
 			);
 		}

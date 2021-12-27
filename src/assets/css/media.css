@@ -1008,6 +1008,10 @@
 	.swiper-pagination-bullet {
 		height: 11px;
 	}
+
+	.jsButton2022 {
+		margin: 20px auto 0;
+	}
 }
 
 @media only screen and (max-width: 400px) {
