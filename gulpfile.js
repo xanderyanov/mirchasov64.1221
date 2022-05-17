@@ -3,7 +3,6 @@
 var gulp = require("gulp");
 var pug = require("gulp-pug");
 var del = require("del");
-var sass = require("gulp-sass");
 var imagemin = require("gulp-imagemin");
 var pngquant = require("imagemin-pngquant");
 var concat = require("gulp-concat");
@@ -14,11 +13,10 @@ var rigger = require("gulp-rigger");
 var uglify = require("gulp-uglify");
 var path = require("path");
 var plumber = require("gulp-plumber");
-var postcss = require("gulp-postcss");
-var postcssImport = require("postcss-import");
 var data = require("gulp-data");
 var fs = require("fs");
-var autoprefixer = require("gulp-autoprefixer");
+var rename = require("gulp-rename");
+var less = require("gulp-less");
 // var path = require("path");
 
 gulp.task("pug", function () {
@@ -37,46 +35,80 @@ gulp.task("pug", function () {
 		.pipe(gulp.dest("build"));
 });
 
+// gulp.task("css", function () {
+// 	return gulp
+// 		.src("src/assets/css/apps.css")
+// 		.pipe(sourcemaps.init())
+// 		.pipe(postcss([postcssImport()]))
+// 		.pipe(sourcemaps.write("."))
+// 		.pipe(gulp.dest("build/assets/css/"));
+// 	// .pipe(rename("apps-x1.css"))
+// 	// .pipe(gulp.dest("build/assets/css/"));
+// });
+
+// символическая ссылка с папки в основном проекте
 gulp.task("css", function () {
 	return gulp
-		.src("src/assets/css/apps.css")
+		.src("src/assets/less/apps.less")
 		.pipe(sourcemaps.init())
-		.pipe(postcss([postcssImport()]))
-		.pipe(autoprefixer())
-		.pipe(sourcemaps.write("."))
+		.pipe(less())
+		.pipe(sourcemaps.write())
 		.pipe(gulp.dest("build/assets/css/"));
 });
 
-gulp.task("image", function () {
-	return gulp
-		.src("src/assets/img/**/*.*") //Выберем наши картинки
-		.pipe(
-			imagemin({
-				//Сожмем их
-				progressive: true,
-				svgoPlugins: [{ removeViewBox: false }],
-				use: [pngquant()],
-				interlaced: true,
-			})
-		)
-		.pipe(gulp.dest("build/assets/img"));
-});
-
-var jsfiles = [
-	"node_modules/jquery/dist/jquery.min.js",
-	"node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js",
-	"node_modules/swiper/js/swiper.min.js",
-	"node_modules/slider-pro/dist/js/jquery.sliderPro.min.js",
-	"node_modules/slick-carousel/slick/slick.min.js",
-	"node_modules/jquery.maskedinput/src/jquery.maskedinput.js",
-	"node_modules/sweetalert/dist/sweetalert.min.js",
-	// "node_modules/instafeed.js/instafeed.min.js"
+var vendorsCssFiles = [
+	"node_modules/sweetalert/dist/sweetalert.css",
+	"node_modules/swiper/swiper-bundle.min.css",
+	"node_modules/fancybox/dist/css/jquery.fancybox.css",
+	"node_modules/bootstrap/dist/css/bootstrap.min.css",
+	"node_modules/bootstrap/dist/css/",
+	"node_modules/bootstrap-icons/font/bootstrap-icons.css",
 ];
 
-gulp.task("js", function () {
+gulp.task("vendorsCss", function () {
 	return (
 		gulp
-			.src(jsfiles, { base: "assets/js" })
+			.src(vendorsCssFiles, { base: "assets/css" })
+			// .pipe(rigger()) //Прогоним через rigger - импорт одного файла в другой конструкцией //- head.html
+
+			.pipe(sourcemaps.init()) //Инициализируем sourcemap
+			.pipe(concatCss("vendors.css"))
+			.pipe(sourcemaps.write("."))
+			.pipe(gulp.dest("build/assets/css"))
+	);
+});
+
+gulp.task("image", function () {
+	return (
+		gulp
+			.src("src/assets/img/**/*.*") //Выберем наши картинки
+			// .pipe(
+			// 	imagemin({
+			// 		//Сожмем их
+			// 		progressive: true,
+			// 		svgoPlugins: [{ removeViewBox: false }],
+			// 		use: [pngquant()],
+			// 		// interlaced: true,
+			// 	})
+			// )
+			.pipe(gulp.dest("build/assets/img"))
+	);
+});
+
+var vendorsJsFiles = [
+	"node_modules/jquery/dist/jquery.min.js",
+	"node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+	"node_modules/fancybox/dist/js/jquery.fancybox.js",
+	"node_modules/jquery.maskedinput/src/jquery.maskedinput.js",
+	"node_modules/sweetalert/dist/sweetalert.min.js",
+	"node_modules/swiper/swiper-bundle.min.js",
+	"node_modules/swiper/swiper-bundle.js"
+];
+
+gulp.task("vendorsJs", function () {
+	return (
+		gulp
+			.src(vendorsJsFiles, { base: "assets/js" })
 			// .pipe(rigger()) //Прогоним через rigger
 			.pipe(plumber())
 			.pipe(sourcemaps.init()) //Инициализируем sourcemap
@@ -87,55 +119,32 @@ gulp.task("js", function () {
 	);
 });
 
+var myjsfiles = [
+	//"src/assets/js/acceptcookie.js",
+	"src/assets/js/discount.js",
+	"src/assets/js/main.js",
+	"src/assets/js/app.js",
+	"src/assets/js/__resize.js"
+];
+
 gulp.task("myJs", function () {
 	return (
 		gulp
-			// .src("src/assets/js/**/*.*")
-			.src("src/assets/js/main.js")
+			// .src("src/assets/js/**/*.js*")
+			// .src("src/assets/js/main.js")
+			.src(myjsfiles, { base: "assets/js" })
 			.pipe(plumber())
-			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
+			.pipe(sourcemaps.init()) //Инициализируем sourcemap
+			.pipe(concat("main.js")) // в какой файл объединить
 			// .pipe(uglify()) //Сожмем наш js
-			// .pipe(sourcemaps.write("."))
+			.pipe(sourcemaps.write("."))
 			.pipe(gulp.dest("build/assets/js"))
 	);
 });
 
-// gulp.task("devjs", function () {
-// 	return (
-// 		gulp
-// 			// .src("src/assets/js/**/*.*")
-// 			.src("src/assets/js/devjs.js")
-// 			.pipe(plumber())
-// 			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
-// 			// .pipe(uglify()) //Сожмем наш js
-// 			// .pipe(sourcemaps.write("."))
-// 			.pipe(gulp.dest("build/assets/js"))
-// 	);
-// });
-
-// gulp.task("sliderJs", function () {
-// 	return (
-// 		gulp
-// 			.src("src/assets/js/slider.js")
-// 			.pipe(plumber())
-// 			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
-// 			// .pipe(uglify()) //Сожмем наш js
-// 			// .pipe(sourcemaps.write("."))
-// 			.pipe(gulp.dest("build/assets/js"))
-// 	);
-// });
-
-// gulp.task("resizeJs", function () {
-// 	return (
-// 		gulp
-// 			.src("src/assets/js/resize.js")
-// 			.pipe(plumber())
-// 			// .pipe(sourcemaps.init()) //Инициализируем sourcemap
-// 			// .pipe(uglify()) //Сожмем наш js
-// 			// .pipe(sourcemaps.write("."))
-// 			.pipe(gulp.dest("build/assets/js"))
-// 	);
-// });
+gulp.task("bootstrapIcons", function () {
+	return gulp.src("node_modules/bootstrap-icons/font/fonts/**/*.*").pipe(gulp.dest("build/assets/fonts"));
+});
 
 gulp.task("fonts", function () {
 	return gulp.src("src/assets/fonts/**/*.*").pipe(gulp.dest("build/assets/fonts"));
@@ -143,6 +152,10 @@ gulp.task("fonts", function () {
 
 gulp.task("icomoon", function () {
 	return gulp.src("src/assets/icomoon/**/*.*").pipe(gulp.dest("build/assets/icomoon"));
+});
+
+gulp.task("video", function () {
+	return gulp.src("src/assets/video/**/*.*").pipe(gulp.dest("build/assets/video"));
 });
 
 gulp.task("clean", function () {
@@ -153,12 +166,23 @@ gulp.task(
 	"build",
 	gulp.series(
 		"clean",
-		gulp.parallel("css", "pug", "image", "js", "myJs", "fonts", "icomoon")
+		gulp.parallel(
+			"css",
+			"vendorsCss",
+			"pug",
+			"image",
+			"vendorsJs",
+			"myJs",
+			"bootstrapIcons",
+			"fonts",
+			"icomoon",
+			"video"
+		)
 	)
 );
 
 gulp.task("watch", function () {
-	gulp.watch("src/assets/**/*.css*", gulp.series("css")).on("uplink", function (filepath) {
+	gulp.watch("src/assets/less/*.less*", gulp.series("css")).on("uplink", function (filepath) {
 		remember.forget("css", path.resolve(filepath));
 		delete cached.caches.styles[path.resolve(filepath)];
 	});
@@ -166,22 +190,10 @@ gulp.task("watch", function () {
 		remember.forget("image", path.resolve(filepath));
 		delete cached.caches.image[path.resolve(filepath)];
 	});
-	gulp.watch("src/assets/js/**/*.js*", gulp.series("myJs")).on("uplink", function (filepath) {
+	gulp.watch("src/assets/js/*.js*", gulp.series("myJs")).on("uplink", function (filepath) {
 		remember.forget("myJs", path.resolve(filepath));
 		delete cached.caches.myJs[path.resolve(filepath)];
 	});
-	// gulp.watch("src/assets/js/devjs.js", gulp.series("devjs")).on("uplink", function (filepath) {
-	// 	remember.forget("devjs", path.resolve(filepath));
-	// 	delete cached.caches.devjs[path.resolve(filepath)];
-	// });
-	// gulp.watch("src/assets/js/slider.js", gulp.series("sliderJs")).on("uplink", function (filepath) {
-	// 	remember.forget("sliderJs", path.resolve(filepath));
-	// 	delete cached.caches.sliderJs[path.resolve(filepath)];
-	// });
-	// gulp.watch("src/assets/js/resize.js", gulp.series("resizeJs")).on("uplink", function (filepath) {
-	// 	remember.forget("resizeJs", path.resolve(filepath));
-	// 	delete cached.caches.sliderJs[path.resolve(filepath)];
-	// });
 	gulp.watch("src/**/*.pug", gulp.series("pug"));
 });
 
